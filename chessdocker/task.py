@@ -7,7 +7,6 @@ docker_client = docker.DockerClient()
 
 @celery.task
 def launch_container():
-    """ Test docker"""
-    print(docker_client.images.list())
-    print(docker_client.containers.\
-                    run("ubuntu", "echo hello world"))
+        """ Test docker"""
+        print(docker_client.images.list())
+        return
