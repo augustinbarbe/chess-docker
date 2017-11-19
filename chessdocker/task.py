@@ -21,21 +21,29 @@ docker_client = docker.DockerClient()
 
 
 @celery.task
-def launch_container():
-    """ Test docker"""
-    game_id = secrets.token_hex(nbytes=16)
-    bot_id = secrets.token_hex(nbytes=16)
-    color = "white"
+def launch_container(game_id):
+    """ Asynchrously start a container with the id""" 
+    white_id = secrets.token_hex(nbytes=16)
+    black_id = secrets.token_hex(nbytes=16)
 
     arena_network = get_network_by_name(docker_client, "chessarena_default")
 
-    cont = docker_client.containers.run('chess-ai',
+    whit = docker_client.containers.run('chess-ai',
                                         detach=True,
-                                        environment=["COLOR_BOT=" + color,
-                                                     "ID_BOT=" + bot_id,
+                                        environment=["WHITE_ID=" + white_id,
+                                                     "BLACK_ID=" + black_id,
+                                                     "COLOR=white",
                                                      "GAME_ID=" + game_id],
                                         network_mode=arena_network.name)
 
-    
+    cont = docker_client.containers.run('chess-ai',
+                                        detach=True,
+                                        environment=["WHITE_ID=" + white_id,
+                                                    "BLACK_ID=" + black_id,
+                                                    "COLOR=black",
+                                                    "GAME_ID=" + game_id],
+                                    network_mode=arena_network.name)
+
+
 
     return
